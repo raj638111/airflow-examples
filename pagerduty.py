@@ -3,7 +3,11 @@ from airflow.providers.pagerduty.hooks.pagerduty import PagerdutyHook
 import boto3
 import base64
 from botocore.exceptions import ClientError
-
+from airflow import DAG
+from airflow.utils.dates import days_ago
+from datetime import timedelta
+from pprint import pprint
+from airflow.operators.python import PythonOperator
 
 def get_secret():
     secret_name = "pagerduty/raj"
@@ -80,5 +84,39 @@ def test():
                                  action="trigger")
     print(response)
 
-test()
+#test()
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': days_ago(2),
+    'email': ['airflow@example.com'],
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 0,
+    'retry_delay': timedelta(minutes=5),
+}
+
+with DAG(
+    'tutorial',
+    default_args=default_args,
+    description='A simple tutorial DAG') as dag:
+
+    def print_context(ds, **kwargs):
+        """Print the Airflow context and ds variable from the context."""
+        pprint(kwargs)
+        print(ds)
+        return 'Whatever you return gets printed in the logs'
+
+    PythonOperator(
+        task_id='print_the_context',
+        python_callable=print_context,
+    )
+
+    # PythonOperator(
+    #     task_id='print_the_context',
+    #     python_callable=test,
+    # )
+
+
 
