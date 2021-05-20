@@ -69,6 +69,9 @@ def test():
     secret = get_secret()
     token = secret['token']
     routing_key = secret['routing_key']
+    # print(type(secret))
+    # print(token)
+    # print(routing_key)
     hook = PagerdutyHook(token = token)
     response = hook.create_event(summary="some summary",
                                  severity="info",
