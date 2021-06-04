@@ -70,13 +70,13 @@ def get_secret():
 
 
 def test():
-    secret = get_secret()
-    token = secret['token']
-    routing_key = secret['routing_key']
+    # secret = get_secret()
+    # token = secret['token']
+    # routing_key = secret['routing_key']
     # print(type(secret))
     # print(token)
     # print(routing_key)
-    hook = PagerdutyHook(token = token)
+    hook = PagerdutyHook(token = '')
     response = hook.create_event(summary="some summary",
                                  severity="info",
                                  source="somesource",
@@ -84,7 +84,7 @@ def test():
                                  action="trigger")
     print(response)
 
-#test()
+test()
 
 # default_args = {
 #     'owner': 'airflow',
